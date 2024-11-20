@@ -4,15 +4,17 @@ import PIL
 from datetime import datetime
 import os
 import time
+import text_recognition
 
 
 def suppose_scourier(image: PIL.Image.Image):
-    # TODO:
-    #    Add you code to search the answer
+    return text_recognition.main_func(image)
 
+
+def test():
     return {
-        "question": "What is this?",
-        "answer": "It is GuoBa~"
+        "question": "This is a question",
+        "answer": "This is a answer"
     }
 
 
@@ -94,7 +96,7 @@ class TransparentScreenCapture:
 
         self.current_content = None
         self.question = tk.Label(self.main_frame, text="", font=("Arial", 14),
-                         fg='white',
+                         fg='black',
                          bg=self.main_frame['bg']
                          )
         self.question.place(relx=0.1, rely=0.1, anchor="nw")
@@ -172,7 +174,8 @@ class TransparentScreenCapture:
         # Save the screenshot
         screenshot.save(filename)
 
-        self.current_content = suppose_scourier(screenshot)
+        # self.current_content = suppose_scourier(filename)
+        self.current_content = test()
 
         self.question.config(text=self.current_content["question"])
         self.answer.config(text=self.current_content["answer"])
