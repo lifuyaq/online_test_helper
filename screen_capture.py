@@ -171,9 +171,6 @@ class TransparentScreenCapture:
 
         time.sleep(1)
 
-        x = 0
-        y = 0
-
         # Capture the screen area
         screenshot = ImageGrab.grab(bbox=rect)
 
