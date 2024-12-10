@@ -4,7 +4,12 @@ import PIL
 from datetime import datetime
 import os
 import time
+import re
 import text_recognition
+
+import sys
+
+from draw_rectangle import mapping_coordinate
 
 
 def suppose_scourier(image: PIL.Image.Image):
@@ -140,6 +145,7 @@ class TransparentScreenCapture:
             self.question.config(text=self.current_content["question"])
             self.answer.config(text=self.current_content["answer"])
 
+
     def clear_answer(self):
         self.current_content = None
         self.root.attributes('-alpha', 0.3)
@@ -147,11 +153,17 @@ class TransparentScreenCapture:
         self.answer.config(text="")
 
     def capture_screen(self):
-        # Get window position
-        x = self.root.winfo_x()
-        y = self.root.winfo_y()
-        w = self.root.winfo_width()
-        h = self.root.winfo_height()
+
+        def get_win_position():
+            x = self.root.winfo_rootx()
+            y = self.root.winfo_rooty()
+            w = self.root.winfo_width()
+            h = self.root.winfo_height()
+            return x, y, w, h
+
+        rect = get_win_position()
+        rect = mapping_coordinate(rect)
+
 
         # Hide window temporarily for clean capture
         self.root.withdraw()
@@ -159,13 +171,11 @@ class TransparentScreenCapture:
 
         time.sleep(1)
 
+        x = 0
+        y = 0
+
         # Capture the screen area
-        screenshot = ImageGrab.grab(bbox=(
-            x + 2,  # Add offset for border
-            y + 2,  # Add offset for border
-            x + w - 2,
-            y + h - 2
-        ))
+        screenshot = ImageGrab.grab(bbox=rect)
 
         # Generate filename with timestamp
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
